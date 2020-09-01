@@ -24,6 +24,8 @@ const StyledProfile = styled.div`
         max-width: 90%;
         border: 1px solid currentColor;
         border-radius: 2em;
+
+        z-index: 1;
     }
 
     div.profile{
