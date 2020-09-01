@@ -1,46 +1,61 @@
 import React from 'react';
+import axios from "axios";
 
 // state structure for the App:
 // 1: fetch a profile and the followers list from that profile. Since I have no followers, we'll pretend.
 // 2: when we have a profile from step 1, add it to a list in state
-// 3: once we have a list of other usernames from step 1, fetch each of their profiles.
-// 4: as each promise from step 3 resolves, take the resulting profile (if any) and add it to the state list
+// 3: when we have followers, add them to the list
 // As the state list is updated, render each new profile. (React will do this part automatically.)
 
 const apiRoot = "https://api.github.com/users/";
 const apiInitialCall = "samkester";
-const fakeFollowers = ["MartaKode", "jidelson", "isaac-gorman", "AustinKelsay", "zakmayfield"]; // hey look it's my build week 1 team again
 
 class App extends React.Component {
   constructor(){
     super();
     this.state = {
       profiles: [],
-      followers: [],
     };
   }
   
   // lifecycle methods
   componentDidMount(){
     // query API for initial profile
-    // then() sort the profile data into this.state.profiles and the follower list into this.state.followers
-    // if the followers list is empty, improvise
+    // then() add the profile data into this.state.profiles and query for followers
+    //   then() add the followers' profile data into this.state.profiles
+    axios.get(apiRoot + apiInitialCall)
+    .then(response => {
+      //console.log(response)
+      this.addProfileToState(response.data);
+      axios.get(response.data.followers_url)
+      .then(response => {
+        response.data.forEach(profile => this.addProfileToState(profile));
+        //console.log(response);
+      }).catch(error => console.log(error));
+    }) // end apiRoot then()
+    .catch(error => console.log(error));
   }
 
   componentDidUpdate(prevProps, prevState){
-    // if the followers array has changed, iterate through its members
-    // for each member that isn't already represented by a profile, query the API for their profile
-    // then() append the profile to this.state.profiles
-    // updates to this.state.profiles do not need handling here; they'll be handled in render()
+    console.log(this.state.profiles);
   }
 
   // helper methods
+  addProfileToState(profile){
+    this.setState({profiles: [...this.state.profiles, profile]})
+  }
   
   // event handlers
 
   render(){
     return(
-      <div>I am a react app.</div>
+      <div>
+      {
+        this.state.profiles ?
+        this.state.profiles.map(item => <div key={item.id}>{item.login}</div>) :
+        <p>Please wait, loading data.</p>
+      }
+      </div>
     )
   }
 }
