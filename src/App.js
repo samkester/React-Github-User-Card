@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from "axios";
+import Profile from "./Profile";
 
 // state structure for the App:
 // 1: fetch a profile and the followers list from that profile. Since I have no followers, we'll pretend.
@@ -52,7 +53,7 @@ class App extends React.Component {
       <div>
       {
         this.state.profiles ?
-        this.state.profiles.map(item => <div key={item.id}>{item.login}</div>) :
+        this.state.profiles.map(item => <Profile key={item.id} user={item} />) :
         <p>Please wait, loading data.</p>
       }
       </div>
