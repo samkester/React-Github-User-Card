@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from "axios";
 import Profile from "./Profile";
+import styled from "styled-components";
 
 // state structure for the App:
 // 1: fetch a profile and the followers list from that profile. Since I have no followers, we'll pretend.
@@ -10,6 +11,18 @@ import Profile from "./Profile";
 
 const apiRoot = "https://api.github.com/users/";
 const apiInitialCall = "samkester";
+
+const StyledApp = styled.div`
+  width: 100%;
+  min-height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  background-image: linear-gradient(120deg, #00002f, #002f2f);
+  color: silver;
+`;
 
 class App extends React.Component {
   constructor(){
@@ -37,9 +50,9 @@ class App extends React.Component {
     .catch(error => console.log(error));
   }
 
-  componentDidUpdate(prevProps, prevState){
+  /*componentDidUpdate(prevProps, prevState){
     console.log(this.state.profiles);
-  }
+  }*/
 
   // helper methods
   addProfileToState(profile){
@@ -50,13 +63,13 @@ class App extends React.Component {
 
   render(){
     return(
-      <div>
+      <StyledApp>
       {
         this.state.profiles ?
         this.state.profiles.map(item => <Profile key={item.id} user={item} />) :
         <p>Please wait, loading data.</p>
       }
-      </div>
+      </StyledApp>
     )
   }
 }
